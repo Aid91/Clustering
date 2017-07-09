@@ -2,6 +2,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import utils
+import numpy.random as rd
 
 class GMM:
     def __init__(self, X, M):
@@ -110,8 +111,72 @@ class GMM:
 
         return log_likelihood
 
-    def k_means(max_iter, tol, interactive=False):
-        pass
+    def k_means(self, max_iter, tol, interactive=False):
 
-    def sample(N):
-        pass
+            N, P = self.X.shape
+
+            distance_old = 0
+            distances = []
+
+            for i in range(max_iter):
+
+                if interactive:
+                    plt.ion()
+
+                # E-step:
+                # Calculate the r_mn matrix
+                dist = np.zeros((self.M, N))
+
+                for j in range(self.M):
+                    dist[j, :] = np.linalg.norm(self.X - self.mu_kmeans[j], axis=1)
+
+                # find the minimum distances for all M components and create one-hot vectors from obtained indexes of minimum distances
+                min = np.argmin(dist, axis=0)
+                r_mn = (np.eye(self.M)[min]).T
+
+                if interactive:
+                    # do the hard-classification and plot the result
+                    utils.classify_and_plot_data(X=self.X, r_mn=r_mn, M=self.M)
+                    plt.pause(0.1)
+
+                # update the means
+                self.mu_kmeans = np.dot(r_mn, self.X) / np.reshape(r_mn.sum(axis=1), (self.M, 1))
+
+                # calculate the distance
+                distance_new = 0
+                for m in range(self.M):
+                    d = self.X - self.mu_kmeans[m]
+                    distance_new += (r_mn[m, :] * np.linalg.norm(d, axis=1)).sum(axis=0)
+
+                distances.append(distance_new)
+
+                # stopping criteria
+                if np.abs(distance_old - distance_new) < tol:
+                    break
+
+                distance_old = distance_new
+
+                if interactive:
+                    plt.clf()
+                    plt.cla()
+
+            if not interactive:
+                # do the hard-classification and plot the final result
+                utils.classify_and_plot_data(X=self.X, r_mn=r_mn, M=self.M)
+
+            return distances
+
+
+    def sample(self, N):
+
+        M = len(self.mu)
+        Y = []
+
+        # create the array X based on the number of components and sample from discrete pmf based on values alpha
+        X = np.array(np.arange(self.M))
+        X = np.random.choice(X, N, p=self.alpha)
+
+        for i in range(M):
+            Y.append(rd.multivariate_normal(mean=self.mu[i], cov=self.sigma[i], size=np.sum(X == i)))
+
+        return Y
