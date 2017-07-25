@@ -63,7 +63,7 @@ class GMM:
             if interactive:
                 # do the soft-classification and plot the values
                 utils.classify_and_plot_data(X=self.X, r_mn=r_mn, M=self.M)
-                plt.pause(0.1)
+                plt.pause(0.001)
 
             # M-step
             # calculate alpha, mu and Sigma
