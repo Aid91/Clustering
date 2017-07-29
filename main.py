@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 from GMM import GMM
 
 # Generate cluster centers, spread, and # of points.
@@ -12,9 +13,6 @@ x1 = np.random.multivariate_normal(center_1, cov_matrix, N)
 x2 = np.random.multivariate_normal(center_2, cov_matrix, N)
 
 X = np.vstack((x1, x2))
-
-#plt.scatter(x1[:,0], x1[:,1], color='b')
-#plt.scatter(x2[:,0], x2[:,1], color='r')
 
 
 # plot unlabelled data
@@ -52,27 +50,27 @@ gmm = GMM(X, M)
 
 # 1.) EM algorithm for GMM:
 # TODO
-#L = gmm.EM(max_iter=max_iter, tol = tol, interactive=True, diagonal=False)
+L = gmm.EM(max_iter=max_iter, tol = tol, interactive=False, diagonal=False)
 
-#plt.ioff()
-#plt.plot(L)
-#plt.xlabel('Iteration')
-#plt.ylabel('Value')
-#plt.title('EM log-likelihood function')
-#plt.show(0)
+plt.ioff()
+plt.plot(L)
+plt.xlabel('Iteration')
+plt.ylabel('Value')
+plt.title('EM log-likelihood function')
+plt.show()
 
 
 # 2.) K-means algorithm:
 # TODO
-# mu_0 = random.sample(list(X),M)
-D = gmm.k_means(max_iter=max_iter, tol=1e-2, interactive=True)
+#mu_0 = random.sample(list(X),M)
+#D = gmm.k_means(max_iter=max_iter, tol=1e-2, interactive=False)
 
-plt.ioff()
-plt.plot(D)
-plt.xlabel('Iteration')
-plt.ylabel('Value')
-plt.title('Cumulative distance')
-plt.show()
+#plt.ioff()
+#plt.plot(D)
+#plt.xlabel('Iteration')
+#plt.ylabel('Value')
+#plt.title('Cumulative distance')
+#plt.show()
 
 # 3.) Sampling from GMM
 # TODO
@@ -88,25 +86,3 @@ plt.xlabel('x')
 plt.ylabel('y')
 plt.title('Sampled data and corresponding means')
 plt.show()
-
-
-def sanity_checks():
-    # likelihood_bivariate_normal
-    mu =  [0.0, 0.0]
-    cov = [[1, 0.2] ,[0.2, 0.5]]
-    x = np.array([[0.9, 1.2], [0.8, 0.8], [0.1, 1.0]])
-    P = likelihood_bivariate_normal(x, mu, cov)
-    print(P)
-
-    # plot_gauss_contour(mu, cov, -2, 2, -2, 2, 'Gaussian')
-
-    # sample_discrete_pmf
-    PM = np.array([0.2, 0.5, 0.2, 0.1])
-    N = 1000
-    X = np.array([1, 2, 3, 4])
-    Y = sample_discrete_pmf(X, PM, N)
-
-    print('Nr_1:', np.sum(Y == 1),
-          'Nr_2:', np.sum(Y == 2),
-          'Nr_3:', np.sum(Y == 3),
-          'Nr_4:', np.sum(Y == 4))
