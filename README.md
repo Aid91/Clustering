@@ -66,7 +66,7 @@ Several examples can be found within the **main.py** file.
 
 ## Sampling results
 
-**[1] Results of sampling from already trained GMM model**
+**[1] Sampling results from already trained GMM model**
 
 ![sampling](assets/sampling.png)
 
